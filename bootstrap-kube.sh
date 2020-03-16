@@ -120,6 +120,8 @@ then
   joinCommand=$(kubeadm token create --print-join-command 2>/dev/null)
   echo "sudo $joinCommand --ignore-preflight-errors=all" > ~/joincluster.sh
   
+  bash dynatrace-operator.sh
+  
   DASHBOARD_TOKEN=$(kubectl describe secrets -n kubernetes-dashboard $(kubectl -n kubernetes-dashboard get secret | awk '/dashboard-admin/{print $1}') | awk '$1=="token:"{print $2}')
   echo "Access to Kubernetes Dashboard at https://$HOST_NAME:30001/" 
   echo "  for authentication use the token below:"
