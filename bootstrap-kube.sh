@@ -42,8 +42,7 @@ echo "[TASK 06] Adding APT repo for Kubernetes"
 echo "... curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -"
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "... cat ~/k8s-lxd/kubernetes.list | sudo tee -a /etc/apt/sources.list.d/kubernetes.list"
-cat ~/k8s-lxd/kubernetes.list | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
-sudo cp ~/k8s-lxd/kubernetes.list /etc/apt/sources.list.d
+cat ~/k8s-lxd/kubernetes.list | sudo tee -a /etc/apt/sources.list.d/kubernetes.list >/dev/null 2>&1
 
 echo "[TASK 07] Installing latest updates via APT-GET"
 echo "... apt-get update"
