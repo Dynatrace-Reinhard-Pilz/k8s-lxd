@@ -15,8 +15,8 @@ sudo systemctl enable docker >/dev/null 2>&1
 echo "... systemctl start docker"
 sudo systemctl start docker >/dev/null 2>&1
 echo "... usermod -aG docker $USER"
-sudo usermod -aG docker $USER >/dev/null 2>&1
-newgrp docker >/dev/null 2>&1
+sudo usermod -aG docker $USER
+newgrp docker >/dev/null
 
 echo "[TASK 03] Ensuring legacy binaries are installed"
 echo "... apt-get install -y iptables arptables ebtables"
