@@ -58,7 +58,7 @@ sudo apt-get install -y kubelet kubeadm kubectl >/dev/null 2>&1
 echo "... apt-mark hold kubelet kubeadm kubectl"
 sudo apt-mark hold kubelet kubeadm kubectl >/dev/null 2>&1
 echo "... cat ~/k8s-lxd/etc_default_kubelet | sudo tee -a /etc/default/kubelet"
-cat ~/k8s-lxd/etc_default_kubelet | sudo tee -a /etc/default/kubelet
+cat ~/k8s-lxd/etc_default_kubelet | sudo tee -a /etc/default/kubelet >/dev/null 2>&1
 echo "... systemctl enable kubelet"
 sudo systemctl enable kubelet >/dev/null 2>&1
 echo "... systemctl start kubelet"
@@ -78,7 +78,7 @@ then
   HOST_NAME=$(hostname -f)
   echo "... Certificates for API Server will also work for host name $HOST_NAME"
   echo "... kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=$IP_ADDRESS --apiserver-cert-extra-sans=$HOST_NAME --ignore-preflight-errors=all"
-  echo "...   please have a look into $HOME/kubeadm_init.log in case that critical step fails fails"
+  echo "...   please have a look into $HOME/kubeadm_init.log in case that critical step fails"
   sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=$IP_ADDRESS --apiserver-cert-extra-sans=$HOST_NAME --ignore-preflight-errors=all >> ~/kubeadm_init.log 2>&1
 
   echo "[TASK 11] Creating .kube/config file for user $USER"
