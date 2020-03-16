@@ -1,7 +1,7 @@
 #!/bin/bash
 su ubuntu
 cd
-echo "[TASK 01] Installing latest updates via APT-GET"
+echo "[TASK 01] Installing latest updates"
 echo "... apt-get update"
 sudo apt-get update >/dev/null 2>&1
 echo "... apt-get -yq upgrade"
@@ -16,7 +16,7 @@ echo "... systemctl start docker"
 sudo systemctl start docker >/dev/null 2>&1
 echo "... usermod -aG docker $USER"
 sudo usermod -aG docker $USER
-newgrp docker >/dev/null
+newgrp docker
 
 echo "[TASK 03] Ensuring legacy binaries are installed"
 echo "... apt-get install -y iptables arptables ebtables"
