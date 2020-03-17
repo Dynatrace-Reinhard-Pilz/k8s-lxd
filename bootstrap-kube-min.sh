@@ -11,6 +11,10 @@ sudo apt-get update >/dev/null 2>&1
 echo "... apt-get -yq upgrade"
 sudo apt-get -yq upgrade >/dev/null 2>&1
 
+echo "[*] Cloning Git Repo"
+echo "... git clone https://github.com/Dynatrace-Reinhard-Pilz/k8s-lxd.git"
+git clone https://github.com/Dynatrace-Reinhard-Pilz/k8s-lxd.git
+
 if [[ $(hostname) =~ .*master.* ]]
 then
 
