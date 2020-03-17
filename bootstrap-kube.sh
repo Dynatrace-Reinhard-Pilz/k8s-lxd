@@ -131,11 +131,11 @@ then
   echo "... kubectl create -f ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml"
   kubectl create -f ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml
   
-#  echo "[*] Deploying MetallB"
-#  echo "... kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml"
-#  kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml
-#  echo "... kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml"
-#  kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml
+  echo "[*] Deploying MetallB"
+  echo "... kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml"
+  kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml
+  echo "... kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml"
+  kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml
   
 #  echo "[*] Installing Helm and Tiller"
 #  echo "... bash ~/k8s-lxd/install-helm.sh"
