@@ -1,13 +1,13 @@
 #!/bin/bash
 su ubuntu
 cd
-echo "[TASK 01] Installing latest updates"
+echo "[*] Installing latest updates"
 echo "... apt-get update"
 sudo apt-get update >/dev/null 2>&1
 echo "... apt-get -yq upgrade"
 sudo apt-get -yq upgrade >/dev/null 2>&1
 
-echo "[TASK 02] Installing Docker"
+echo "[*] Installing Docker"
 echo "... apt-get -yq install docker.io"
 sudo apt-get -yq install docker.io >/dev/null 2>&1
 echo "... systemctl enable docker"
@@ -18,7 +18,7 @@ echo "... usermod -aG docker $USER"
 sudo usermod -aG docker $USER
 newgrp docker
 
-echo "[TASK 03] Ensuring legacy binaries are installed"
+echo "[*] Ensuring legacy binaries are installed"
 echo "... apt-get install -y iptables arptables ebtables"
 sudo apt-get install -y iptables arptables ebtables >/dev/null 2>&1
 echo "... update-alternatives --set iptables /usr/sbin/iptables-legacy"
@@ -30,23 +30,23 @@ sudo update-alternatives --set arptables /usr/sbin/arptables-legacy >/dev/null 2
 echo "... update-alternatives --set ebtables /usr/sbin/ebtables-legacy"
 sudo update-alternatives --set ebtables /usr/sbin/ebtables-legacy >/dev/null 2>&1
 
-echo "[TASK 04] Installing additional support packages"
+echo "[*] Installing additional support packages"
 echo "... apt-get install -yq apt-transport-https curl"
 sudo apt-get install -yq apt-transport-https curl >/dev/null 2>&1
 echo "... apt-get install -y jq"
 sudo apt-get install -y jq >/dev/null 2>&1
 
-echo "[TASK 05] Cloning Git Repo"
+echo "[*] Cloning Git Repo"
 echo "... git clone https://github.com/Dynatrace-Reinhard-Pilz/k8s-lxd.git"
 git clone https://github.com/Dynatrace-Reinhard-Pilz/k8s-lxd.git
 
-echo "[TASK 06] Adding APT repo for Kubernetes"
+echo "[*] Adding Kubernetes Repository"
 echo "... curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -"
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "... cat ~/k8s-lxd/kubernetes.list | sudo tee -a /etc/apt/sources.list.d/kubernetes.list"
 cat ~/k8s-lxd/kubernetes.list | sudo tee -a /etc/apt/sources.list.d/kubernetes.list >/dev/null 2>&1
 
-echo "[TASK 07] Installing latest updates via APT-GET"
+echo "[*] Installing latest updates"
 echo "... apt-get update"
 sudo apt-get update >/dev/null 2>&1
 echo "... apt-get -yq upgrade"
@@ -54,7 +54,7 @@ sudo apt-get -yq upgrade >/dev/null 2>&1
 echo "... apt-get -yq autoremove"
 sudo apt-get -yq autoremove >/dev/null 2>&1
 
-echo "[TASK 08] Installing kubelet, kubeadm and kubectl"
+echo "[*] Installing kubelet, kubeadm and kubectl"
 echo "... apt-get install -y kubelet kubeadm kubectl"
 sudo apt-get install -y kubelet kubeadm kubectl >/dev/null 2>&1
 echo "... apt-mark hold kubelet kubeadm kubectl"
@@ -66,7 +66,7 @@ sudo systemctl enable kubelet >/dev/null 2>&1
 echo "... systemctl start kubelet"
 sudo systemctl start kubelet >/dev/null 2>&1
 
-echo "[TASK 09] mknod hack for running k8s within LXC"
+echo "[*] mknod hack for running k8s within LXC"
 echo "... mknod /dev/kmsg c 1 11"
 sudo mknod /dev/kmsg c 1 11 >/dev/null 2>&1
 
@@ -74,7 +74,7 @@ sudo mknod /dev/kmsg c 1 11 >/dev/null 2>&1
 if [[ $(hostname) =~ .*master.* ]]
 then
 
-  echo "[TASK 10] Initialize Kubernetes Cluster"
+  echo "[*] Initialize Kubernetes Cluster"
   IP_ADDRESS=`ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1`
   echo "... API Server will advertise address $IP_ADDRESS"
   HOST_NAME=$(hostname -f)
@@ -83,19 +83,31 @@ then
   echo "...   please have a look into $HOME/kubeadm_init.log in case that critical step fails"
   sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=$IP_ADDRESS --apiserver-cert-extra-sans=$HOST_NAME --ignore-preflight-errors=all >> ~/kubeadm_init.log 2>&1
 
-  echo "[TASK 11] Creating .kube/config file for user $USER"
+  echo "[*] Creating .kube/config file for user $USER"
   echo "... mkdir ~/.kube"
   mkdir ~/.kube >/dev/null 2>&1
   echo "... cp /etc/kubernetes/admin.conf ~/.kube/config"
   sudo cp /etc/kubernetes/admin.conf ~/.kube/config >/dev/null 2>&1
   echo "... chown -R ubuntu:ubuntu ~/.kube"
   sudo chown -R ubuntu:ubuntu ~/.kube >/dev/null 2>&1
+  
+  echo "[*] Allowing to schedule pods on master node"
+  echo "... kubectl taint node k8s-master node-role.kubernetes.io/master:NoSchedule-"
+  kubectl taint node k8s-master node-role.kubernetes.io/master:NoSchedule-
 
-  echo "[TASK 12] Deploying flannel network"
+  echo "[*] Deploying flannel network"
   echo "... kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
   kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml >/dev/null 2>&1
+  
+  echo "[*] Installing NFS Server"
+  echo "... bash ~/k8s-lxd/install-nfs-server.sh"
+  bash ~/k8s-lxd/install-nfs-server.sh
+  
+  echo "[*] Configuring Persistent Storage Volumes"
+  echo "... kubectl apply -f ~/k8s-lxd/persistent-storage.yaml"
+  kubectl apply -f ~/k8s-lxd/persistent-storage.yaml
 
-  echo "[TASK 13] Deploying Kubernetes Dashboard"
+  echo "[*] Deploying Kubernetes Dashboard"
   echo "... kubectl create namespace kubernetes-dashboard"
   kubectl create namespace kubernetes-dashboard >/dev/null 2>&1
   mkdir ~/certs >/dev/null 2>&1
@@ -118,21 +130,25 @@ then
   echo "... kubectl create -f ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml"
   kubectl create -f ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml 2>&1
   
-  echo "[TASK 14] Deploying MetallB"
+  echo "[*] Deploying MetallB"
   echo "... kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml"
   kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml
   echo "... kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml"
   kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml
   
-  echo "[TASK 15] Installing Helm and Tiller"
+  echo "[*] Installing Helm and Tiller"
   echo "... bash ~/k8s-lxd/install-helm.sh"
   bash ~/k8s-lxd/install-helm.sh
   
-  echo "[TASK 16] Installing OneAgent Operator"
+  echo "[*] Istio"
+  echo "... bash ~/k8s-lxd/install-istio.sh"
+  bash ~/k8s-lxd/install-istio.sh
+  
+  echo "[*] Installing OneAgent Operator"
   echo "... bash ~/k8s-lxd/dynatrace-operator.sh"
   bash ~/k8s-lxd/dynatrace-operator.sh
   
-  echo "[TASK 17] Generating and saving cluster join command to ~/joincluster.sh"
+  echo "[*] Generating and saving cluster join command to ~/joincluster.sh"
   joinCommand=$(kubeadm token create --print-join-command 2>/dev/null)
   echo "sudo $joinCommand --ignore-preflight-errors=all" > ~/joincluster.sh
   
@@ -150,7 +166,7 @@ if [[ $(hostname) =~ .*worker.* ]]
 then
 
   # Join worker nodes to the Kubernetes cluster
-  echo "[TASK 10] Joining Kubernetes Cluster"
+  echo "[*] Joining Kubernetes Cluster"
   scp -o "StrictHostKeyChecking no" -i ~/.ssh/id_rsa ubuntu@k8s-master.mushroom.home:~/joincluster.sh ~ 
   bash ~/joincluster.sh >> ~/joincluster.log
 
