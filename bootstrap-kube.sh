@@ -33,6 +33,8 @@ sudo update-alternatives --set ebtables /usr/sbin/ebtables-legacy >/dev/null 2>&
 echo "[TASK 04] Installing additional support packages"
 echo "... apt-get install -yq apt-transport-https curl"
 sudo apt-get install -yq apt-transport-https curl >/dev/null 2>&1
+echo "... apt-get install -y jq"
+sudo apt-get install -y jq >/dev/null 2>&1
 
 echo "[TASK 05] Cloning Git Repo"
 echo "... git clone https://github.com/Dynatrace-Reinhard-Pilz/k8s-lxd.git"
@@ -115,14 +117,28 @@ then
   kubectl create -f ~/k8s-lxd/dashboard-admin.yaml 2>&1
   echo "... kubectl create -f ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml"
   kubectl create -f ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml 2>&1
-
-  echo "[TASK 14] Generating and saving cluster join command to ~/joincluster.sh"
+  
+  echo "[TASK 14] Deploying MetallB"
+  echo "... kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml"
+  kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml
+  echo "... kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml"
+  kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml
+  
+  echo "[TASK 15] Installing Helm and Tiller"
+  echo "... bash ~/k8s-lxd/install-helm.sh"
+  bash ~/k8s-lxd/install-helm.sh
+  
+  echo "[TASK 16] Installing OneAgent Operator"
+  echo "... bash ~/k8s-lxd/dynatrace-operator.sh"
+  bash ~/k8s-lxd/dynatrace-operator.sh
+  
+  echo "[TASK 17] Generating and saving cluster join command to ~/joincluster.sh"
   joinCommand=$(kubeadm token create --print-join-command 2>/dev/null)
   echo "sudo $joinCommand --ignore-preflight-errors=all" > ~/joincluster.sh
   
-  bash ~/k8s-lxd/dynatrace-operator.sh
   
   DASHBOARD_TOKEN=$(kubectl describe secrets -n kubernetes-dashboard $(kubectl -n kubernetes-dashboard get secret | awk '/dashboard-admin/{print $1}') | awk '$1=="token:"{print $2}')
+  echo ""
   echo "Access to Kubernetes Dashboard at https://$HOST_NAME:30001/" 
   echo "  for authentication use the token below:"
   echo ""
