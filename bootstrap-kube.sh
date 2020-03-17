@@ -125,6 +125,7 @@ then
   kubectl create secret generic kubernetes-dashboard-certs --from-file=dashboard.key --from-file=dashboard.crt -n kubernetes-dashboard
   cd ~
   echo "... kubectl create -f  ~/k8s-lxd/kubernetes-dashboard.yaml"
+  sed -i -e "s/LOCALIP/$IP_ADDRESS/" ~/k8s-lxd/kubernetes-dashboard.yaml
   kubectl create -f  ~/k8s-lxd/kubernetes-dashboard.yaml
   echo "... kubectl create -f ~/k8s-lxd/dashboard-admin.yaml"
   kubectl create -f ~/k8s-lxd/dashboard-admin.yaml
