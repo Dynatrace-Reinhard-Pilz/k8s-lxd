@@ -91,9 +91,9 @@ then
   echo "... chown -R ubuntu:ubuntu ~/.kube"
   sudo chown -R ubuntu:ubuntu ~/.kube >/dev/null 2>&1
   
-  echo "[*] Allowing to schedule pods on master node"
-  echo "... kubectl taint node k8s-master node-role.kubernetes.io/master:NoSchedule-"
-  kubectl taint node k8s-master node-role.kubernetes.io/master:NoSchedule-
+#  echo "[*] Allowing to schedule pods on master node"
+#  echo "... kubectl taint node k8s-master node-role.kubernetes.io/master:NoSchedule-"
+#  kubectl taint node k8s-master node-role.kubernetes.io/master:NoSchedule-
 
   echo "[*] Deploying flannel network"
   echo "... kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
@@ -140,9 +140,9 @@ then
   echo "... bash ~/k8s-lxd/install-helm.sh"
   bash ~/k8s-lxd/install-helm.sh
   
-#  echo "[*] Istio"
-#  echo "... bash ~/k8s-lxd/install-istio.sh"
-#  bash ~/k8s-lxd/install-istio.sh
+  echo "[*] Istio"
+  echo "... bash ~/k8s-lxd/install-istio.sh"
+  bash ~/k8s-lxd/install-istio.sh
   
   echo "[*] Installing OneAgent Operator"
   echo "... bash ~/k8s-lxd/dynatrace-operator.sh"

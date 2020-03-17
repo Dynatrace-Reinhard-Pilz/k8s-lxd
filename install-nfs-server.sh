@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo apt install nfs-kernel-server
+sudo apt-get -yq install nfs-kernel-server
 sudo mkdir -p /k8s-storage
 sudo mkdir -p /k8s-storage/pv0001
 sudo chown -R nobody:nogroup /k8s-storage
