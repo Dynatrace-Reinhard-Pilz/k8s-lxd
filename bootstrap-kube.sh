@@ -99,13 +99,13 @@ then
   echo "... kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
   kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml >/dev/null 2>&1
   
-  echo "[*] Installing NFS Server"
-  echo "... bash ~/k8s-lxd/install-nfs-server.sh"
-  bash ~/k8s-lxd/install-nfs-server.sh
+#  echo "[*] Installing NFS Server"
+#  echo "... bash ~/k8s-lxd/install-nfs-server.sh"
+#  bash ~/k8s-lxd/install-nfs-server.sh
   
-  echo "[*] Configuring Persistent Storage Volumes"
-  echo "... kubectl apply -f ~/k8s-lxd/persistent-storage.yaml"
-  kubectl apply -f ~/k8s-lxd/persistent-storage.yaml
+#  echo "[*] Configuring Persistent Storage Volumes"
+#  echo "... kubectl apply -f ~/k8s-lxd/persistent-storage.yaml"
+#  kubectl apply -f ~/k8s-lxd/persistent-storage.yaml
 
   echo "[*] Deploying Kubernetes Dashboard"
   echo "... kubectl create namespace kubernetes-dashboard"
@@ -130,11 +130,11 @@ then
   echo "... kubectl create -f ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml"
   kubectl create -f ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml 2>&1
   
-  echo "[*] Deploying MetallB"
-  echo "... kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml"
-  kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml
-  echo "... kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml"
-  kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml
+#  echo "[*] Deploying MetallB"
+#  echo "... kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml"
+#  kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml
+#  echo "... kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml"
+#  kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml
   
   echo "[*] Installing Helm and Tiller"
   echo "... bash ~/k8s-lxd/install-helm.sh"
