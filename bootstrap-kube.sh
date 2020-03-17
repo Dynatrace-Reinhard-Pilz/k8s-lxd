@@ -140,9 +140,9 @@ then
   echo "... bash ~/k8s-lxd/install-helm.sh"
   bash ~/k8s-lxd/install-helm.sh
   
-  echo "[*] Istio"
-  echo "... bash ~/k8s-lxd/install-istio.sh"
-  bash ~/k8s-lxd/install-istio.sh
+#  echo "[*] Istio"
+#  echo "... bash ~/k8s-lxd/install-istio.sh"
+#  bash ~/k8s-lxd/install-istio.sh
   
   echo "[*] Installing OneAgent Operator"
   echo "... bash ~/k8s-lxd/dynatrace-operator.sh"
