@@ -76,12 +76,14 @@ then
 
   echo "[*] Initialize Kubernetes Cluster"
   IP_ADDRESS=`ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1`
-  echo "... API Server will advertise address $IP_ADDRESS"
+  # echo "... API Server will advertise address $IP_ADDRESS"
   HOST_NAME=$(hostname -f)
-  echo "... Certificates for API Server will also work for host name $HOST_NAME"
-  echo "... kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=$IP_ADDRESS --apiserver-cert-extra-sans=$HOST_NAME --ignore-preflight-errors=all"
-  echo "...   please have a look into $HOME/kubeadm_init.log in case that critical step fails"
-  sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=$IP_ADDRESS --apiserver-cert-extra-sans=$HOST_NAME --ignore-preflight-errors=all >> ~/kubeadm_init.log 2>&1
+  # echo "... Certificates for API Server will also work for host name $HOST_NAME"
+  # echo "... kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=$IP_ADDRESS --apiserver-cert-extra-sans=$HOST_NAME --ignore-preflight-errors=all"
+  echo "... kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all"
+  # echo "...   please have a look into $HOME/kubeadm_init.log in case that critical step fails"
+  # sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=$IP_ADDRESS --apiserver-cert-extra-sans=$HOST_NAME --ignore-preflight-errors=all >> ~/kubeadm_init.log 2>&1
+  sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all >> ~/kubeadm_init.log 2>&1
 
   echo "[*] Creating .kube/config file for user $USER"
   echo "... mkdir ~/.kube"
