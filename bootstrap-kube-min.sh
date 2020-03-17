@@ -15,6 +15,11 @@ echo "[*] Cloning Git Repo"
 echo "... git clone https://github.com/Dynatrace-Reinhard-Pilz/k8s-lxd.git"
 git clone https://github.com/Dynatrace-Reinhard-Pilz/k8s-lxd.git
 
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo systemctl enable kubelet
+sudo systemctl start kubelet
+
 if [[ $(hostname) =~ .*master.* ]]
 then
 
