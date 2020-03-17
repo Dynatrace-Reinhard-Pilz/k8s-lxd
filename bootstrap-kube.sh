@@ -96,8 +96,9 @@ then
 #  kubectl taint node k8s-master node-role.kubernetes.io/master:NoSchedule-
 
   echo "[*] Deploying flannel network"
+  sed -i -e "s/LOCALIP/$IP_ADDRESS/" ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml
   echo "... kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
-  kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml >/dev/null 2>&1
+  kubectl apply -f ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml >/dev/null 2>&1
   
 #  echo "[*] Installing NFS Server"
 #  echo "... bash ~/k8s-lxd/install-nfs-server.sh"
@@ -136,17 +137,17 @@ then
 #  echo "... kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml"
 #  kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml
   
-  echo "[*] Installing Helm and Tiller"
-  echo "... bash ~/k8s-lxd/install-helm.sh"
-  bash ~/k8s-lxd/install-helm.sh
+#  echo "[*] Installing Helm and Tiller"
+#  echo "... bash ~/k8s-lxd/install-helm.sh"
+#  bash ~/k8s-lxd/install-helm.sh
   
 #  echo "[*] Istio"
 #  echo "... bash ~/k8s-lxd/install-istio.sh"
 #  bash ~/k8s-lxd/install-istio.sh
   
-  echo "[*] Installing OneAgent Operator"
-  echo "... bash ~/k8s-lxd/dynatrace-operator.sh"
-  bash ~/k8s-lxd/dynatrace-operator.sh
+#  echo "[*] Installing OneAgent Operator"
+#  echo "... bash ~/k8s-lxd/dynatrace-operator.sh"
+#  bash ~/k8s-lxd/dynatrace-operator.sh
   
   echo "[*] Generating and saving cluster join command to ~/joincluster.sh"
   joinCommand=$(kubeadm token create --print-join-command 2>/dev/null)
