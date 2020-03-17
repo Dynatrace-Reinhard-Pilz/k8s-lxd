@@ -96,9 +96,9 @@ then
 #  kubectl taint node k8s-master node-role.kubernetes.io/master:NoSchedule-
 
   echo "[*] Deploying flannel network"
-  sed -i -e "s/LOCALIP/$IP_ADDRESS/" ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml
+  sed -i -e "s/LOCALIP/$IP_ADDRESS/" ~/k8s-lxd/kube-flannel.yaml
   echo "... kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
-  kubectl apply -f ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml >/dev/null 2>&1
+  kubectl apply -f ~/k8s-lxd/kube-flannel.yaml >/dev/null 2>&1
   
 #  echo "[*] Installing NFS Server"
 #  echo "... bash ~/k8s-lxd/install-nfs-server.sh"
