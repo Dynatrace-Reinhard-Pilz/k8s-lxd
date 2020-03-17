@@ -110,26 +110,26 @@ then
 
   echo "[*] Deploying Kubernetes Dashboard"
   echo "... kubectl create namespace kubernetes-dashboard"
-  kubectl create namespace kubernetes-dashboard >/dev/null 2>&1
-  mkdir ~/certs >/dev/null 2>&1
-  cd ~/certs >/dev/null 2>&1
+  kubectl create namespace kubernetes-dashboard
+  mkdir ~/certs
+  cd ~/certs
   echo "... openssl genrsa -out dashboard.key 2048"
-  openssl genrsa -out dashboard.key 2048 >/dev/null 2>&1
+  openssl genrsa -out dashboard.key 2048
   echo "... openssl rsa -in dashboard.key -out dashboard.key"
-  openssl rsa -in dashboard.key -out dashboard.key >/dev/null 2>&1
+  openssl rsa -in dashboard.key -out dashboard.key
   echo "... openssl req -sha256 -new -key dashboard.key -out dashboard.csr -subj '/CN=localhost'"
-  openssl req -sha256 -new -key dashboard.key -out dashboard.csr -subj '/CN=localhost' >/dev/null 2>&1
+  openssl req -sha256 -new -key dashboard.key -out dashboard.csr -subj '/CN=localhost'
   echo "... openssl x509 -req -sha256 -days 365 -in dashboard.csr -signkey dashboard.key -out dashboard.crt"
-  openssl x509 -req -sha256 -days 365 -in dashboard.csr -signkey dashboard.key -out dashboard.crt >/dev/null 2>&1
+  openssl x509 -req -sha256 -days 365 -in dashboard.csr -signkey dashboard.key -out dashboard.crt
   echo "... kubectl create secret generic kubernetes-dashboard-certs --from-file=dashboard.key --from-file=dashboard.crt -n kubernetes-dashboard"
-  kubectl create secret generic kubernetes-dashboard-certs --from-file=dashboard.key --from-file=dashboard.crt -n kubernetes-dashboard >/dev/null 2>&1
-  cd
+  kubectl create secret generic kubernetes-dashboard-certs --from-file=dashboard.key --from-file=dashboard.crt -n kubernetes-dashboard
+  cd ~
   echo "... kubectl create -f  ~/k8s-lxd/kubernetes-dashboard.yaml"
-  kubectl create -f  ~/k8s-lxd/kubernetes-dashboard.yaml 2>&1
+  kubectl create -f  ~/k8s-lxd/kubernetes-dashboard.yaml
   echo "... kubectl create -f ~/k8s-lxd/dashboard-admin.yaml"
-  kubectl create -f ~/k8s-lxd/dashboard-admin.yaml 2>&1
+  kubectl create -f ~/k8s-lxd/dashboard-admin.yaml
   echo "... kubectl create -f ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml"
-  kubectl create -f ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml 2>&1
+  kubectl create -f ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml
   
 #  echo "[*] Deploying MetallB"
 #  echo "... kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml"
