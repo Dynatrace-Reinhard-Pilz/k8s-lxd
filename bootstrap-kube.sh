@@ -85,11 +85,11 @@ then
 
   echo "[*] Creating .kube/config file for user $USER"
   echo "... mkdir ~/.kube"
-  mkdir ~/.kube >/dev/null 2>&1
+  mkdir ~/.kube
   echo "... cp /etc/kubernetes/admin.conf ~/.kube/config"
-  sudo cp /etc/kubernetes/admin.conf ~/.kube/config >/dev/null 2>&1
+  sudo cp /etc/kubernetes/admin.conf ~/.kube/config
   echo "... chown -R ubuntu:ubuntu ~/.kube"
-  sudo chown -R ubuntu:ubuntu ~/.kube >/dev/null 2>&1
+  sudo chown -R ubuntu:ubuntu ~/.kube
   
 #  echo "[*] Allowing to schedule pods on master node"
 #  echo "... kubectl taint node k8s-master node-role.kubernetes.io/master:NoSchedule-"
