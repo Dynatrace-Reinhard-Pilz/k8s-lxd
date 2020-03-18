@@ -8,7 +8,6 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Recycle
-  storageClassName: slow
   nfs:
     path: /k8s-storage/pv0001
     server: k8s-master.mushroom.home
@@ -19,11 +18,10 @@ metadata:
   name: pv0002
 spec:
   capacity:
-    storage: 20Gi
+    storage: 100Mi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Recycle
-  storageClassName: slow
   nfs:
     path: /k8s-storage/pv0002
     server: k8s-master.mushroom.home
