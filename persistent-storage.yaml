@@ -4,13 +4,13 @@ metadata:
   name: pv0001
 spec:
   capacity:
-    storage: 20Gi
+    storage: 150Mi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Recycle
   nfs:
-    path: /k8s-storage/pv0001
-    server: k8s-master.mushroom.home
+    path: /storage/pv0001
+    server: nfs-server.mushroom.home
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -18,10 +18,66 @@ metadata:
   name: pv0002
 spec:
   capacity:
-    storage: 100Mi
+    storage: 150Mi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Recycle
   nfs:
-    path: /k8s-storage/pv0002
-    server: k8s-master.mushroom.home
+    path: /storage/pv0002
+    server: nfs-server.mushroom.home
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv0003
+spec:
+  capacity:
+    storage: 150Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  nfs:
+    path: /storage/pv0003
+    server: nfs-server.mushroom.home
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv0004
+spec:
+  capacity:
+    storage: 150Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  nfs:
+    path: /storage/pv0004
+    server: nfs-server.mushroom.home
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv0005
+spec:
+  capacity:
+    storage: 150Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  nfs:
+    path: /storage/pv0005
+    server: nfs-server.mushroom.home
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv0006
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  nfs:
+    path: /storage/pv0006
+    server: nfs-server.mushroom.home
