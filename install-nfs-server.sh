@@ -5,6 +5,8 @@ echo "...... mkdir -p /k8s-storage"
 sudo mkdir -p /k8s-storage >/dev/null 2>&1
 echo "...... mkdir -p /k8s-storage/pv0001"
 sudo mkdir -p /k8s-storage/pv0001 >/dev/null 2>&1
+echo "...... mkdir -p /k8s-storage/pv0002"
+sudo mkdir -p /k8s-storage/pv0002 >/dev/null 2>&1
 echo "...... chown -R nobody:nogroup /k8s-storage"
 sudo chown -R nobody:nogroup /k8s-storage >/dev/null 2>&1
 echo "...... chmod -R 777 /k8s-storage"
