@@ -209,10 +209,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-#        - name: KUBERNETES_SERVICE_HOST
-#          value: "LOCALIP"
-#        - name: KUBERNETES_SERVICE_PORT
-#          value: "6443"              
+        - name: KUBERNETES_SERVICE_HOST
+          value: "LOCALIP"
+        - name: KUBERNETES_SERVICE_PORT
+          value: "6443"              
         volumeMounts:
         - name: run
           mountPath: /run/flannel
