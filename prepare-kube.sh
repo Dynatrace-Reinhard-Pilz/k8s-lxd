@@ -13,10 +13,10 @@ if [ $? -ne 0 ] ; then
   echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
 fi
 
-sudo apt-get update >/dev/null 2>&1
-sudo apt-get -yq upgrade >/dev/null 2>&1
-sudo apt-get -yq autoremove >/dev/null 2>&1
-sudo apt-get -yq install docker.io apt-transport-https curl jq iptables arptables ebtables >/dev/null 2>&1
+sudo apt-get update
+sudo apt-get -yq upgrade
+sudo apt-get -yq autoremove
+sudo apt-get -yq install docker.io apt-transport-https curl jq iptables arptables ebtables linux-modules-5.3.0-40-generic >/dev/null 2>&1
 
 sudo systemctl enable docker
 sudo systemctl start docker
