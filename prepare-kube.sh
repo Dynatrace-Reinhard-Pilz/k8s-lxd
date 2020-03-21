@@ -16,7 +16,7 @@ fi
 sudo apt-get update
 sudo apt-get -yq upgrade
 sudo apt-get -yq autoremove
-sudo apt-get -yq install docker.io apt-transport-https curl jq iptables arptables ebtables linux-modules-5.3.0-40-generic >/dev/null 2>&1
+sudo apt-get -yq install docker.io apt-transport-https curl jq iptables arptables ebtables linux-modules-5.3.0-40-generic
 
 sudo systemctl enable docker
 sudo systemctl start docker
