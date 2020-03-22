@@ -46,7 +46,7 @@ metadata:
   name: pv0004
 spec:
   capacity:
-    storage: 150Mi
+    storage: 1Gi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Recycle
@@ -60,7 +60,7 @@ metadata:
   name: pv0005
 spec:
   capacity:
-    storage: 150Mi
+    storage: 1Gi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Recycle
