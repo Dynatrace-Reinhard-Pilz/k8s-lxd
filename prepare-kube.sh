@@ -1,4 +1,4 @@
-#@!/bin/sh
+#!/bin/sh
 # https://medium.com/adaltas/install-and-debug-kubernetes-inside-lxd-7309cc0552cd
 # if [ "$(whoami)" != "root" ] ; then
 #    echo "Please run as root"
