@@ -30,7 +30,7 @@ sudo update-alternatives --set ebtables /usr/sbin/ebtables-legacy
 
 sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
-echo 'KUBELET_EXTRA_ARGS="--fail-swap-on=false"' | sudo tee -a /etc/default/kubelet
+echo 'KUBELET_EXTRA_ARGS="--fail-swap-on=false" ----cgroup-driver=cgroupfs' | sudo tee -a /etc/default/kubelet
 sudo systemctl enable kubelet
 sudo systemctl start kubelet
 
@@ -81,11 +81,11 @@ kubectl -n dynatrace create secret generic oneagent --from-literal="apiToken=$AP
 curl https://raw.githubusercontent.com/Dynatrace/dynatrace-oneagent-operator/$LATEST_RELEASE/deploy/cr.yaml | sed -e "s/skipCertCheck:\ false/skipCertCheck:\ true/" | sed -e "s/tokens:\ \"\"/tokens:\ \"oneagent\"/" | sed -e "s/ENVIRONMENTID.live.dynatrace.com/managed.mushroom.home\/e\/$ENVIRONMENTID/" > cr.yaml
 kubectl apply -f cr.yaml
 
-kubectl describe secrets -n kubernetes-dashboard $(kubectl -n kubernetes-dashboard get secret | awk '/dashboard-admin/{print $1}') | awk '$1=="token:"{print $2}'
+
 echo ""
 echo "Access Token for Kubernetes Dashboard:"
 echo ""
-eyJhbGciOiJSUzI1NiIsImtpZCI6ImxtQ3BxOWczWUZqZEtqbVN3RjUxRTljX3p3Wk5heGhuMlJyVVh1dU81aEEifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJkYXNoYm9hcmQtYWRtaW4tdG9rZW4tczRnNGIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGFzaGJvYXJkLWFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiYWVlNDZmYjItMjU2ZS00NWJmLWEyNmUtZDJmMjBlMGMwODE5Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Omt1YmVybmV0ZXMtZGFzaGJvYXJkOmRhc2hib2FyZC1hZG1pbiJ9.e2dD9BwniZ59m-OxATwXHwl1hJsRPVr-4niyMEbtqenMqZsSpi5PQ5z0T-KLTnFBaqZZ6DyWCmL25kGDyOTw2D1S5idWnkIEwn7M2--zHd54ApR28ukDr5WsONhb_vy2PguNi7gfAPE4htlJlcK6rAHhoz3XolerCcTbcsnx6DYP18jL2al9vrkWrumVMvsNmMdHHYiFf0hDIv5KepIsjvHX3TrOL6GPkBtHy-10lxJfLvKq-azkb7I2cwOUdx5DwVet66HB5fWrgbrNnCYslwU8RvsNvLkMkjCKGkpqvG94EFcPqmmNS9yggjFQxlXsJiqgq-YkpjsK9AjFLZS1BQ
+kubectl describe secrets -n kubernetes-dashboard $(kubectl -n kubernetes-dashboard get secret | awk '/dashboard-admin/{print $1}') | awk '$1=="token:"{print $2}'
   
 #  echo "[*] Installing Helm and Tiller"
 #  echo "... bash ~/k8s-lxd/install-helm.sh"
