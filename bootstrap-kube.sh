@@ -1,148 +1,91 @@
-#!/bin/bash
-until su ubuntu
-do
-  sleep 0.1
-done
+#!/bin/sh
+# if [ "$(whoami)" != "root" ] ; then
+#    echo "Please run as root"
+#    exit
+# fi
+sudo rm -Rf /tmp/kube-install >/dev/null 2>&1
+sudo mkdir -p /tmp/kube-install >/dev/null 2>&1
 
-cd
-echo "[*] Installing latest updates"
-echo "... apt-get update"
-sudo apt-get update >/dev/null 2>&1
-echo "... apt-get -yq upgrade"
-sudo apt-get -yq upgrade >/dev/null 2>&1
+grep -q "deb https://apt.kubernetes.io/ kubernetes-xenial main" /etc/apt/sources.list.d/kubernetes.list >/dev/null 2>&1
+if [ $? -ne 0 ] ; then
+  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+  echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+fi
 
-echo "[*] Installing Docker"
-echo "... apt-get -yq install docker.io"
-sudo apt-get -yq install docker.io >/dev/null 2>&1
-echo "... systemctl enable docker"
-sudo systemctl enable docker >/dev/null 2>&1
-echo "... systemctl start docker"
-sudo systemctl start docker >/dev/null 2>&1
-echo "... usermod -aG docker $USER"
-sudo usermod -aG docker $USER
-newgrp docker
+sudo apt-get update
+sudo apt-get -yq upgrade
+sudo apt-get -yq autoremove
+sudo apt-get -yq install docker.io apt-transport-https curl jq iptables arptables ebtables linux-modules-5.3.0-40-generic nfs-common
 
-echo "[*] Ensuring legacy binaries are installed"
-echo "... apt-get install -y iptables arptables ebtables"
-sudo apt-get install -y iptables arptables ebtables >/dev/null 2>&1
-echo "... update-alternatives --set iptables /usr/sbin/iptables-legacy"
-sudo update-alternatives --set iptables /usr/sbin/iptables-legacy >/dev/null 2>&1
-echo "... update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy"
-sudo update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy >/dev/null 2>&1
-echo "... update-alternatives --set arptables /usr/sbin/arptables-legacy"
-sudo update-alternatives --set arptables /usr/sbin/arptables-legacy >/dev/null 2>&1
-echo "... update-alternatives --set ebtables /usr/sbin/ebtables-legacy"
-sudo update-alternatives --set ebtables /usr/sbin/ebtables-legacy >/dev/null 2>&1
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo usermod -aG docker ubuntu
+sudo usermod -aG docker root
+# newgrp
 
-echo "[*] Installing additional support packages"
-echo "... apt-get install -yq apt-transport-https curl"
-sudo apt-get install -yq apt-transport-https curl >/dev/null 2>&1
-echo "... apt-get install -y jq"
-sudo apt-get install -y jq >/dev/null 2>&1
+sudo update-alternatives --set iptables /usr/sbin/iptables-legacy
+sudo update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+sudo update-alternatives --set arptables /usr/sbin/arptables-legacy
+sudo update-alternatives --set ebtables /usr/sbin/ebtables-legacy
 
-echo "[*] Cloning Git Repo"
-echo "... git clone https://github.com/Dynatrace-Reinhard-Pilz/k8s-lxd.git"
-git clone https://github.com/Dynatrace-Reinhard-Pilz/k8s-lxd.git
+sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+echo 'KUBELET_EXTRA_ARGS="--fail-swap-on=false"' | sudo tee -a /etc/default/kubelet
+sudo systemctl enable kubelet
+sudo systemctl start kubelet
 
-echo "[*] Adding Kubernetes Repository"
-echo "... curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -"
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-echo "... cat ~/k8s-lxd/kubernetes.list | sudo tee -a /etc/apt/sources.list.d/kubernetes.list"
-cat ~/k8s-lxd/kubernetes.list | sudo tee -a /etc/apt/sources.list.d/kubernetes.list >/dev/null 2>&1
+sudo mknod /dev/kmsg c 1 11
 
-echo "[*] Installing latest updates"
-echo "... apt-get update"
-sudo apt-get update >/dev/null 2>&1
-echo "... apt-get -yq upgrade"
-sudo apt-get -yq upgrade >/dev/null 2>&1
-echo "... apt-get -yq autoremove"
-sudo apt-get -yq autoremove >/dev/null 2>&1
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
 
-echo "[*] Installing kubelet, kubeadm and kubectl"
-echo "... apt-get install -y kubelet kubeadm kubectl"
-sudo apt-get install -y kubelet kubeadm kubectl >/dev/null 2>&1
-echo "... apt-mark hold kubelet kubeadm kubectl"
-sudo apt-mark hold kubelet kubeadm kubectl >/dev/null 2>&1
-echo "... cat ~/k8s-lxd/etc_default_kubelet | sudo tee -a /etc/default/kubelet"
-cat ~/k8s-lxd/etc_default_kubelet | sudo tee -a /etc/default/kubelet >/dev/null 2>&1
-echo "... systemctl enable kubelet"
-sudo systemctl enable kubelet >/dev/null 2>&1
-echo "... systemctl start kubelet"
-sudo systemctl start kubelet >/dev/null 2>&1
+mkdir ~/.kube
+sudo cp /etc/kubernetes/admin.conf ~/.kube/config
+sudo chown -R ubuntu:ubuntu ~/.kube
 
-echo "[*] mknod hack for running k8s within LXC"
-echo "... mknod /dev/kmsg c 1 11"
-sudo mknod /dev/kmsg c 1 11 >/dev/null 2>&1
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+kubectl taint nodes --all node-role.kubernetes.io/master-
+
+sudo mkdir -p /storage
+sudo mkdir -p /storage/pv0001
+sudo mkdir -p /storage/pv0002
+sudo mkdir -p /storage/pv0003
+sudo mkdir -p /storage/pv0004
+sudo mkdir -p /storage/pv0005
+sudo mkdir -p /storage/pv0006
+sudo chown -R nobody:nogroup /storage
+sudo chmod -R 777 /storage
+
+kubectl apply -f https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/local-storage.yaml
+kubectl apply -f https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/persistent-storage.yaml
 
 
-if [[ $(hostname) =~ .*master.* ]]
-then
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-rc6/aio/deploy/recommended.yaml
+kubectl apply -f https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/dashboard-admin.yaml
+kubectl apply -f https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/dashboard-admin-bind-cluster-role.yaml
 
-  echo "[*] Initialize Kubernetes Cluster"
-  IP_ADDRESS=`ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1`
-  # echo "... API Server will advertise address $IP_ADDRESS"
-  HOST_NAME=$(hostname -f)
-  # echo "... Certificates for API Server will also work for host name $HOST_NAME"
-  # echo "... kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=$IP_ADDRESS --apiserver-cert-extra-sans=$HOST_NAME --ignore-preflight-errors=all"
-  echo "... kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all"
-  # echo "...   please have a look into $HOME/kubeadm_init.log in case that critical step fails"
-  # sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=$IP_ADDRESS --apiserver-cert-extra-sans=$HOST_NAME --ignore-preflight-errors=all >> ~/kubeadm_init.log 2>&1
-  sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all >> ~/kubeadm_init.log 2>&1
+kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml
+kubectl apply -f https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/metallb-config-map.yaml
 
-  echo "[*] Creating .kube/config file for user $USER"
-  echo "... mkdir ~/.kube"
-  mkdir ~/.kube
-  echo "... cp /etc/kubernetes/admin.conf ~/.kube/config"
-  sudo cp /etc/kubernetes/admin.conf ~/.kube/config
-  echo "... chown -R ubuntu:ubuntu ~/.kube"
-  sudo chown -R ubuntu:ubuntu ~/.kube
-  
-#  echo "[*] Allowing to schedule pods on master node"
-#  echo "... kubectl taint node k8s-master node-role.kubernetes.io/master:NoSchedule-"
-#  kubectl taint node k8s-master node-role.kubernetes.io/master:NoSchedule-
+kubectl patch service kubernetes-dashboard -n kubernetes-dashboard -p '{"spec":{"type": "LoadBalancer"}}'
 
-  echo "[*] Deploying flannel network"
-  sed -i -e "s/LOCALIP/$IP_ADDRESS/" ~/k8s-lxd/kube-flannel.yaml
-  echo "... kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
-  kubectl apply -f ~/k8s-lxd/kube-flannel.yaml >/dev/null 2>&1
-  
-#  echo "[*] Installing NFS Server"
-#  echo "... bash ~/k8s-lxd/install-nfs-server.sh"
-#  bash ~/k8s-lxd/install-nfs-server.sh
-  
-#  echo "[*] Configuring Persistent Storage Volumes"
-#  echo "... kubectl apply -f ~/k8s-lxd/persistent-storage.yaml"
-#  kubectl apply -f ~/k8s-lxd/persistent-storage.yaml
+echo "$(kubeadm token create --print-join-command 2>/dev/null) --ignore-preflight-errors=all" | sudo sh
 
-  echo "[*] Deploying Kubernetes Dashboard"
-  echo "... kubectl create namespace kubernetes-dashboard"
-  kubectl create namespace kubernetes-dashboard
-  mkdir ~/certs
-  cd ~/certs
-  echo "... openssl genrsa -out dashboard.key 2048"
-  openssl genrsa -out dashboard.key 2048
-  echo "... openssl rsa -in dashboard.key -out dashboard.key"
-  openssl rsa -in dashboard.key -out dashboard.key
-  echo "... openssl req -sha256 -new -key dashboard.key -out dashboard.csr -subj '/CN=localhost'"
-  openssl req -sha256 -new -key dashboard.key -out dashboard.csr -subj '/CN=localhost'
-  echo "... openssl x509 -req -sha256 -days 365 -in dashboard.csr -signkey dashboard.key -out dashboard.crt"
-  openssl x509 -req -sha256 -days 365 -in dashboard.csr -signkey dashboard.key -out dashboard.crt
-  echo "... kubectl create secret generic kubernetes-dashboard-certs --from-file=dashboard.key --from-file=dashboard.crt -n kubernetes-dashboard"
-  kubectl create secret generic kubernetes-dashboard-certs --from-file=dashboard.key --from-file=dashboard.crt -n kubernetes-dashboard
-  cd ~
-  echo "... kubectl create -f  ~/k8s-lxd/kubernetes-dashboard.yaml"
-  sed -i -e "s/LOCALIP/$IP_ADDRESS/" ~/k8s-lxd/kubernetes-dashboard.yaml
-  kubectl create -f  ~/k8s-lxd/kubernetes-dashboard.yaml
-  echo "... kubectl create -f ~/k8s-lxd/dashboard-admin.yaml"
-  kubectl create -f ~/k8s-lxd/dashboard-admin.yaml
-  echo "... kubectl create -f ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml"
-  kubectl create -f ~/k8s-lxd/dashboard-admin-bind-cluster-role.yaml
-  
-  echo "[*] Deploying MetallB"
-  echo "... kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml"
-  kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml
-  echo "... kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml"
-  kubectl apply -f ~/k8s-lxd/metallb-config-map.yaml
+
+DEACT_API_TOKEN=***
+DEACT_PAAS_TOKEN=***
+DEACT_ENVIRONMENTID=***
+kubectl create namespace dynatrace
+LATEST_RELEASE=$(curl -s https://api.github.com/repos/dynatrace/dynatrace-oneagent-operator/releases/latest | grep tag_name | cut -d '"' -f 4)
+kubectl create -f https://raw.githubusercontent.com/Dynatrace/dynatrace-oneagent-operator/$LATEST_RELEASE/deploy/kubernetes.yaml
+kubectl -n dynatrace create secret generic oneagent --from-literal="apiToken=$API_TOKEN" --from-literal="paasToken=$PAAS_TOKEN"
+curl https://raw.githubusercontent.com/Dynatrace/dynatrace-oneagent-operator/$LATEST_RELEASE/deploy/cr.yaml | sed -e "s/skipCertCheck:\ false/skipCertCheck:\ true/" | sed -e "s/tokens:\ \"\"/tokens:\ \"oneagent\"/" | sed -e "s/ENVIRONMENTID.live.dynatrace.com/managed.mushroom.home\/e\/$ENVIRONMENTID/" > cr.yaml
+kubectl apply -f cr.yaml
+
+kubectl describe secrets -n kubernetes-dashboard $(kubectl -n kubernetes-dashboard get secret | awk '/dashboard-admin/{print $1}') | awk '$1=="token:"{print $2}'
+echo ""
+echo "Access Token for Kubernetes Dashboard:"
+echo ""
+eyJhbGciOiJSUzI1NiIsImtpZCI6ImxtQ3BxOWczWUZqZEtqbVN3RjUxRTljX3p3Wk5heGhuMlJyVVh1dU81aEEifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJkYXNoYm9hcmQtYWRtaW4tdG9rZW4tczRnNGIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGFzaGJvYXJkLWFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiYWVlNDZmYjItMjU2ZS00NWJmLWEyNmUtZDJmMjBlMGMwODE5Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Omt1YmVybmV0ZXMtZGFzaGJvYXJkOmRhc2hib2FyZC1hZG1pbiJ9.e2dD9BwniZ59m-OxATwXHwl1hJsRPVr-4niyMEbtqenMqZsSpi5PQ5z0T-KLTnFBaqZZ6DyWCmL25kGDyOTw2D1S5idWnkIEwn7M2--zHd54ApR28ukDr5WsONhb_vy2PguNi7gfAPE4htlJlcK6rAHhoz3XolerCcTbcsnx6DYP18jL2al9vrkWrumVMvsNmMdHHYiFf0hDIv5KepIsjvHX3TrOL6GPkBtHy-10lxJfLvKq-azkb7I2cwOUdx5DwVet66HB5fWrgbrNnCYslwU8RvsNvLkMkjCKGkpqvG94EFcPqmmNS9yggjFQxlXsJiqgq-YkpjsK9AjFLZS1BQ
   
 #  echo "[*] Installing Helm and Tiller"
 #  echo "... bash ~/k8s-lxd/install-helm.sh"
@@ -151,31 +94,3 @@ then
 #  echo "[*] Istio"
 #  echo "... bash ~/k8s-lxd/install-istio.sh"
 #  bash ~/k8s-lxd/install-istio.sh
-  
-#  echo "[*] Installing OneAgent Operator"
-#  echo "... bash ~/k8s-lxd/dynatrace-operator.sh"
-#  bash ~/k8s-lxd/dynatrace-operator.sh
-  
-  echo "[*] Generating and saving cluster join command to ~/joincluster.sh"
-  joinCommand=$(kubeadm token create --print-join-command 2>/dev/null)
-  echo "sudo $joinCommand --ignore-preflight-errors=all" > ~/joincluster.sh
-  
-  
-  DASHBOARD_TOKEN=$(kubectl describe secrets -n kubernetes-dashboard $(kubectl -n kubernetes-dashboard get secret | awk '/dashboard-admin/{print $1}') | awk '$1=="token:"{print $2}')
-  echo ""
-  echo "Access to Kubernetes Dashboard at https://$HOST_NAME:30001/" 
-  echo "  for authentication use the token below:"
-  echo ""
-  echo $DASHBOARD_TOKEN
-
-fi
-
-if [[ $(hostname) =~ .*worker.* ]]
-then
-
-  # Join worker nodes to the Kubernetes cluster
-  echo "[*] Joining Kubernetes Cluster"
-  scp -o "StrictHostKeyChecking no" -i ~/.ssh/id_rsa ubuntu@k8s-master.mushroom.home:~/joincluster.sh ~ 
-  bash ~/joincluster.sh >> ~/joincluster.log
-
-fi
