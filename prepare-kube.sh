@@ -1,9 +1,9 @@
 #@!/bin/sh
 # https://medium.com/adaltas/install-and-debug-kubernetes-inside-lxd-7309cc0552cd
-if [ "$(whoami)" != "root" ] ; then
-    echo "Please run as root"
-    exit
-fi
+# if [ "$(whoami)" != "root" ] ; then
+#    echo "Please run as root"
+#    exit
+# fi
 
 sudo rm -Rf /tmp/kube-install >/dev/null 2>&1
 sudo mkdir -p /tmp/kube-install >/dev/null 2>&1
