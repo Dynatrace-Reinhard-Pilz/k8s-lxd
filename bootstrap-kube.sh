@@ -30,7 +30,7 @@ sudo update-alternatives --set ebtables /usr/sbin/ebtables-legacy
 
 sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
-echo 'KUBELET_EXTRA_ARGS="--fail-swap-on=false" --cgroup-driver=cgroupfs' | sudo tee -a /etc/default/kubelet
+echo 'KUBELET_EXTRA_ARGS="--fail-swap-on=false"' | sudo tee -a /etc/default/kubelet
 sudo systemctl enable kubelet
 sudo systemctl start kubelet
 
