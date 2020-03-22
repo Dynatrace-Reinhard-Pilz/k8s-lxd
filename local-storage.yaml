@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: volume-0001
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/storage/pv0001"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: volume-0002
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/storage/pv0002"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: volume-0003
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/storage/pv0003"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: volume-0004
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/storage/pv0004"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: volume-0005
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/storage/pv0005"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: volume-0006
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/storage/pv0006"
