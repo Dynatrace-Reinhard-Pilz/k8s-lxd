@@ -37,7 +37,7 @@ kubectl apply -f https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-l
 
 kubectl patch service kubernetes-dashboard -n kubernetes-dashboard -p '{"spec":{"type": "LoadBalancer"}}'
 
-echo "$(kubeadm token create --print-join-command 2>/dev/null) --ignore-preflight-errors=all" | sudo sh
+# echo "$(kubeadm token create --print-join-command 2>/dev/null) --ignore-preflight-errors=all" | sudo sh
 
 
 DEACT_API_TOKEN=***
