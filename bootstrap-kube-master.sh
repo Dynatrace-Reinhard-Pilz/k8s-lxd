@@ -24,7 +24,7 @@ sudo mkdir -p /storage/pv0006
 sudo chown -R nobody:nogroup /storage
 sudo chmod -R 777 /storage
 
-kubectl apply -f https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/local-storage.yaml
+# kubectl apply -f https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/local-storage.yaml
 kubectl apply -f https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/persistent-storage.yaml
 
 
