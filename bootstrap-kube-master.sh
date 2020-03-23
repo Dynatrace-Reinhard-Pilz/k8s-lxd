@@ -12,7 +12,7 @@ sudo cp /etc/kubernetes/admin.conf ~/.kube/config
 sudo chown -R ubuntu:ubuntu ~/.kube
 
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-kubectl taint nodes --all node-role.kubernetes.io/master-
+# kubectl taint nodes --all node-role.kubernetes.io/master-
 
 sudo mkdir -p /storage
 sudo mkdir -p /storage/pv0001
