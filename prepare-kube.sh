@@ -37,3 +37,14 @@ sudo systemctl enable kubelet
 sudo systemctl start kubelet
 
 sudo mknod /dev/kmsg c 1 11
+sudo echo "[Unit]" | tee -a /etc/systemd/system/mknod_kmsg.service
+sudo echo "After=network.service" | tee -a /etc/systemd/system/mknod_kmsg.service
+sudo echo "" | tee -a /etc/systemd/system/mknod_kmsg.service
+sudo echo "[Service]" | tee -a /etc/systemd/system/mknod_kmsg.service
+sudo echo "ExecStart=mknod /dev/kmsg c 1 11" | tee -a /etc/systemd/system/mknod_kmsg.service
+sudo echo "" | tee -a /etc/systemd/system/mknod_kmsg.service
+sudo echo "[Install]" | tee -a /etc/systemd/system/mknod_kmsg.service
+sudo echo "WantedBy=default.target" | tee -a /etc/systemd/system/mknod_kmsg.service
+sudo chmod 664 /etc/systemd/system/mknod_kmsg.service
+sudo systemctl daemon-reload
+sudo systemctl enable mknod_kmsg.service
