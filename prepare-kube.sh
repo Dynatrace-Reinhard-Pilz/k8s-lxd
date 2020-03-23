@@ -36,4 +36,4 @@ echo 'KUBELET_EXTRA_ARGS="--fail-swap-on=false"' | sudo tee -a /etc/default/kube
 sudo systemctl enable kubelet
 sudo systemctl start kubelet
 
-sudo mknod /dev/kmsg c 1 11
+# sudo mknod /dev/kmsg c 1 11
