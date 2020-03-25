@@ -29,6 +29,7 @@ kubectl patch service kubernetes-dashboard -n kubernetes-dashboard -p '{"spec":{
 # echo "$(kubeadm token create --print-join-command 2>/dev/null) --ignore-preflight-errors=all" | sudo sh
 
 
+cd ~
 DEACT_API_TOKEN=***
 DEACT_PAAS_TOKEN=***
 DEACT_ENVIRONMENTID=***
