@@ -1,9 +1,14 @@
 #!/bin/sh
 if [ "$(whoami)" = "root" ] ; then
-    echo "$(whoami)"
     sudo -H -u ubuntu bash -c 'curl https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/bootstrap-kube.sh | sh'
     exit 0
 fi
+HN=$(hostname 2>/dev/null)
+while [ "$HN" = "" ]
+do
+  sleep 5
+  HN=$(hostname 2>/dev/null)
+done
 if [[ $(hostname) =~ .*master.* ]]
 then
     curl https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/bootstrap-kube-master.sh | sh
