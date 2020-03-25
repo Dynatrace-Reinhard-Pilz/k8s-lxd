@@ -5,9 +5,9 @@ while IFS= read i; do
     lxc delete $i
 done
 
-./lxc-k8s-launch.sh k8s-master &
+sh ./lxc-k8s-launch.sh k8s-master &
 
 for i in $(seq 1 5);
 do
-    ./lxc-k8s-launch.sh k8s-worker-0$i &
+   sh  ./lxc-k8s-launch.sh k8s-worker-0$i &
 done
