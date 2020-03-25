@@ -1,7 +1,7 @@
 #!/bin/sh
 if [ "$(whoami)" = "root" ] ; then
     echo "$(whoami)"
-    sudo -H -u ubuntu bash -c 'curl https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/prepare-kube.sh | sh'
+    sudo -H -u ubuntu bash -c 'curl -H "Cache-Control: no-cache"https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/prepare-kube.sh | sh'
     exit 0
 fi
 sudo rm -Rf /tmp/kube-install >/dev/null 2>&1
