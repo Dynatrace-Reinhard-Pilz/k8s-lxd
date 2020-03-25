@@ -1,4 +1,8 @@
 #!/bin/sh
+while ! ping -c 1 raw.githubusercontent.com; do
+    echo "Waiting for network being fully available..."
+    sleep 1
+done
 HN=$(hostname 2>/dev/null)
 echo "host: $HN"
 while [ "$HN" = "" ]
