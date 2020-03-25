@@ -1,9 +1,10 @@
 #!/bin/sh
-# if [ "$(whoami)" != "root" ] ; then
-#    echo "Please run as root"
-#    exit
-# fi
-curl https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/prepare-kube.sh | sh
+if [ "$(whoami)" = "root" ] ; then
+    echo "$(whoami)"
+    sudo -H -u ubuntu bash -c 'curl https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/bootstrap-kube-master.sh | sh'
+    exit 0
+fi
+curl https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/bootstrap-kube-common.sh | sh
 
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
 
@@ -14,19 +15,7 @@ sudo chown -R ubuntu:ubuntu ~/.kube
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 # kubectl taint nodes --all node-role.kubernetes.io/master-
 
-sudo mkdir -p /storage
-sudo mkdir -p /storage/pv0001
-sudo mkdir -p /storage/pv0002
-sudo mkdir -p /storage/pv0003
-sudo mkdir -p /storage/pv0004
-sudo mkdir -p /storage/pv0005
-sudo mkdir -p /storage/pv0006
-sudo chown -R nobody:nogroup /storage
-sudo chmod -R 777 /storage
-
-# kubectl apply -f https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/local-storage.yaml
 kubectl apply -f https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/persistent-storage.yaml
-
 
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-rc6/aio/deploy/recommended.yaml
 kubectl apply -f https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/dashboard-admin.yaml
