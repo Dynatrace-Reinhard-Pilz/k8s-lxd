@@ -9,7 +9,6 @@ curl https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/bo
 JOINCMD=`rsh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -l ubuntu k8s-master kubeadm token create --print-join-command 2>/dev/null`
 while [ "$JOINCMD" = "" ]
 do
-  echo "command: $JOINCMD"
   sleep 10
   JOINCMD=`rsh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -l ubuntu k8s-master kubeadm token create --print-join-command 2>/dev/null`
 done
