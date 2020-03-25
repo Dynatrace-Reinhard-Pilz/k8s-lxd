@@ -7,7 +7,7 @@ do
   HN=$(hostname 2>/dev/null)
 done
 if [ "$(whoami)" = "root" ] ; then
-    sudo -H -u ubuntu bash -c 'curl -H "Cache-Control: no-cache" https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/bootstrap-kube.sh | sh'
+    sudo -H -u ubuntu bash -c 'curl -H "Cache-Control: no-cache" https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/bootstrap-kube.sh | bash'
     exit 0
 fi
 if [[ $(hostname) =~ .*master.* ]]
