@@ -1,11 +1,11 @@
 #!/bin/sh
 HN=$(hostname 2>/dev/null)
+echo "host: $HN"
 while [ "$HN" = "" ]
 do
   sleep 5
   HN=$(hostname 2>/dev/null)
 done
-echo "host: $HN"
 if [ "$(whoami)" = "root" ] ; then
     sudo -H -u ubuntu bash -c 'curl https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/bootstrap-kube.sh | sh'
     exit 0
