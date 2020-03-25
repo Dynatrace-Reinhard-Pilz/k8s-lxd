@@ -11,4 +11,4 @@ do
   sleep 3
   IPI=`lxc list k8s-master --columns 4 --format csv`
 done
-# curl -H "Cache-Control: no-cache" https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/bootstrap-kube.sh | lxc exec $1 bash
+curl -H "Cache-Control: no-cache" https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/bootstrap-kube.sh | lxc exec $1 bash
