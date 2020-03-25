@@ -1,7 +1,9 @@
 #!/bin/sh
 lxc list --columns n --format csv k8s- | \
 while IFS= read i; do
+    echo "stopping $i"
     lxc stop $i
+    echo "deleting $i"
     lxc delete $i
 done
 

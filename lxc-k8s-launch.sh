@@ -3,6 +3,7 @@ if [ "$1" = "" ]; then
     echo "no instance name specified"
     exit 1
 fi
+echo "creating $1"
 lxc launch ubuntu-k8s $1 --profile k8s
 IPI=`lxc list k8s-master --columns 4 --format csv`
 while [ "$IPI" = "" ]
