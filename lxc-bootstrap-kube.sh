@@ -1,5 +1,5 @@
 #!/bin/sh
-lxc list --columns n --format csv k8s- | sed 1d | \
+lxc list --columns n --format csv k8s- | \
 while IFS= read i; do
     lxc stop $i
     lxc delete $i
