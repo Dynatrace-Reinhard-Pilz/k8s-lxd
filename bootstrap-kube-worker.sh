@@ -1,16 +1,15 @@
 #!/bin/sh
-# if [ "$(whoami)" != "root" ] ; then
-#    echo "Please run as root"
-#    exit
-# fi
-curl https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/prepare-kube.sh | sh
+if [ "$(whoami)" = "root" ] ; then
+    echo "$(whoami)"
+    sudo -H -u ubuntu bash -c 'curl -H "Cache-Control: no-cache" https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/bootstrap-kube-worker.sh | sh'
+    exit 0
+fi
+curl -H "Cache-Control: no-cache" https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/bootstrap-kube-common.sh | sh
 
-sudo mkdir -p /storage
-sudo mkdir -p /storage/pv0001
-sudo mkdir -p /storage/pv0002
-sudo mkdir -p /storage/pv0003
-sudo mkdir -p /storage/pv0004
-sudo mkdir -p /storage/pv0005
-sudo mkdir -p /storage/pv0006
-sudo chown -R nobody:nogroup /storage
-sudo chmod -R 777 /storage
+JOINCMD=`rsh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -l ubuntu k8s-master kubeadm token create --print-join-command 2>/dev/null`
+while [ "$JOINCMD" = "" ]
+do
+  sleep 10
+  JOINCMD=`rsh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -l ubuntu k8s-master kubeadm token create --print-join-command 2>/dev/null`
+done
+echo "sudo $JOINCMD  --ignore-preflight-errors=all" | /bin/sh
