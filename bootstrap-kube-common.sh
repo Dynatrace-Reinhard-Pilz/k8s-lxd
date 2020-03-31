@@ -37,15 +37,15 @@ sudo apt-mark hold kubelet kubeadm kubectl
 sudo systemctl enable kubelet
 sudo systemctl start kubelet
 
-# sudo mknod /dev/kmsg c 1 11
-# sudo echo "[Unit]" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
-# sudo echo "After=network.service" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
-# sudo echo "" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
-# sudo echo "[Service]" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
-# sudo echo "ExecStart=mknod /dev/kmsg c 1 11" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
-# sudo echo "" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
-# sudo echo "[Install]" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
-# sudo echo "WantedBy=default.target" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
-# sudo chmod 664 /etc/systemd/system/mknod_kmsg.service
-# sudo systemctl daemon-reload
-# sudo systemctl enable mknod_kmsg.service
+sudo mknod /dev/kmsg c 1 11
+sudo echo "[Unit]" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
+sudo echo "After=network.service" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
+sudo echo "" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
+sudo echo "[Service]" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
+sudo echo "ExecStart=mknod /dev/kmsg c 1 11" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
+sudo echo "" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
+sudo echo "[Install]" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
+sudo echo "WantedBy=default.target" | sudo tee -a /etc/systemd/system/mknod_kmsg.service
+sudo chmod 664 /etc/systemd/system/mknod_kmsg.service
+sudo systemctl daemon-reload
+sudo systemctl enable mknod_kmsg.service
