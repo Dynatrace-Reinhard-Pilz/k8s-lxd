@@ -42,7 +42,7 @@ kubectl patch service kubernetes-dashboard -n kubernetes-dashboard -p '{"spec":{
 
 # echo "[*] Installing Helm and Tiller"
 # echo "... bash ~/k8s-lxd/install-helm.sh"
-bash ~/k8s-lxd/install-helm.sh
+# bash ~/k8s-lxd/install-helm.sh
 
 echo ""
 echo "Access Token for Kubernetes Dashboard:"
