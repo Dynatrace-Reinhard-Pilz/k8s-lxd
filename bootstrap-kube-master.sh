@@ -40,9 +40,7 @@ kubectl patch service kubernetes-dashboard -n kubernetes-dashboard -p '{"spec":{
 # curl https://raw.githubusercontent.com/Dynatrace/dynatrace-oneagent-operator/$LATEST_RELEASE/deploy/cr.yaml | sed -e "s/skipCertCheck:\ false/skipCertCheck:\ true/" | sed -e "s/tokens:\ \"\"/tokens:\ \"oneagent\"/" | sed -e "s/ENVIRONMENTID.live.dynatrace.com/managed.mushroom.home\/e\/$ENVIRONMENTID/" > cr.yaml
 # kubectl apply -f cr.yaml
 
-# echo "[*] Installing Helm and Tiller"
-# echo "... bash ~/k8s-lxd/install-helm.sh"
-# bash ~/k8s-lxd/install-helm.sh
+curl https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/install-helm.sh | bash
 
 echo ""
 echo "Access Token for Kubernetes Dashboard:"
