@@ -40,15 +40,14 @@ kubectl patch service kubernetes-dashboard -n kubernetes-dashboard -p '{"spec":{
 # curl https://raw.githubusercontent.com/Dynatrace/dynatrace-oneagent-operator/$LATEST_RELEASE/deploy/cr.yaml | sed -e "s/skipCertCheck:\ false/skipCertCheck:\ true/" | sed -e "s/tokens:\ \"\"/tokens:\ \"oneagent\"/" | sed -e "s/ENVIRONMENTID.live.dynatrace.com/managed.mushroom.home\/e\/$ENVIRONMENTID/" > cr.yaml
 # kubectl apply -f cr.yaml
 
+# echo "[*] Installing Helm and Tiller"
+# echo "... bash ~/k8s-lxd/install-helm.sh"
+bash ~/k8s-lxd/install-helm.sh
 
 echo ""
 echo "Access Token for Kubernetes Dashboard:"
 echo ""
 kubectl describe secrets -n kubernetes-dashboard $(kubectl -n kubernetes-dashboard get secret | awk '/dashboard-admin/{print $1}') | awk '$1=="token:"{print $2}'
-  
-#  echo "[*] Installing Helm and Tiller"
-#  echo "... bash ~/k8s-lxd/install-helm.sh"
-#  bash ~/k8s-lxd/install-helm.sh
   
 #  echo "[*] Istio"
 #  echo "... bash ~/k8s-lxd/install-istio.sh"
