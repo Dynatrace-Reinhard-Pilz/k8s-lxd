@@ -1,4 +1,8 @@
 #!/bin/sh
+# sudo sysctl fs.inotify.max_user_instances=1048576  
+# sudo sysctl fs.inotify.max_queued_events=1048576  
+# sudo sysctl fs.inotify.max_user_watches=1048576  
+# sudo sysctl vm.max_map_count=262144
 if [ "$(whoami)" = "root" ] ; then
     echo "$(whoami)"
     sudo -H -u ubuntu bash -c 'curl -H "Cache-Control: no-cache" https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/prepare-kube.sh | sh'
