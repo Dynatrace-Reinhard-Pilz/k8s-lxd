@@ -15,7 +15,7 @@ sudo chown -R ubuntu:ubuntu ~/.kube
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 # kubectl taint nodes --all node-role.kubernetes.io/master-
 
-kubectl apply -f https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/persistent-storage.yaml
+# kubectl apply -f https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/persistent-storage.yaml
 
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-rc6/aio/deploy/recommended.yaml
 kubectl apply -f https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/dashboard-admin.yaml
