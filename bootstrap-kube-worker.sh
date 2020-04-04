@@ -6,6 +6,8 @@ if [ "$(whoami)" = "root" ] ; then
 fi
 curl -H "Cache-Control: no-cache" https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/bootstrap-kube-common.sh | bash
 
+echo "COMMON DONE"
+
 JOINCMD=`rsh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -l ubuntu k8s-master kubeadm token create --print-join-command 2>/dev/null`
 while [ "$JOINCMD" = "" ]
 do
