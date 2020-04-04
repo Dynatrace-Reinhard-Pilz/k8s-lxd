@@ -8,12 +8,12 @@ curl -H "Cache-Control: no-cache" https://raw.githubusercontent.com/Dynatrace-Re
 
 echo "COMMON DONE"
 
-JOINCMD=`rsh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -l ubuntu k8s-master kubeadm token create --print-join-command 2>/dev/null`
+JOINCMD=$(rsh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -l ubuntu k8s-master kubeadm token create --print-join-command 2>/dev/null)
 echo "sudo $JOINCMD  --ignore-preflight-errors=all"
 while [ "$JOINCMD" = "" ]
 do
   sleep 10
-  JOINCMD=`rsh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -l ubuntu k8s-master kubeadm token create --print-join-command 2>/dev/null`
+  JOINCMD=$(rsh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -l ubuntu k8s-master kubeadm token create --print-join-command 2>/dev/null)
 done
 echo "sudo $JOINCMD  --ignore-preflight-errors=all"
 echo "sudo $JOINCMD  --ignore-preflight-errors=all" | /bin/sh
