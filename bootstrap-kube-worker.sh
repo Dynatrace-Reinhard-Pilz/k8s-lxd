@@ -9,6 +9,7 @@ curl -H "Cache-Control: no-cache" https://raw.githubusercontent.com/Dynatrace-Re
 echo "COMMON DONE"
 
 JOINCMD=`rsh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -l ubuntu k8s-master kubeadm token create --print-join-command 2>/dev/null`
+echo "sudo $JOINCMD  --ignore-preflight-errors=all"
 while [ "$JOINCMD" = "" ]
 do
   sleep 10
