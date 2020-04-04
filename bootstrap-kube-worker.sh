@@ -6,14 +6,10 @@ if [ "$(whoami)" = "root" ] ; then
 fi
 curl -H "Cache-Control: no-cache" https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/bootstrap-kube-common.sh | bash
 
-echo "COMMON DONE"
-
-JOINCMD=$(/usr/bin/rsh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -l ubuntu k8s-master kubeadm token create --print-join-command 2>/dev/null)
-echo "sudo $JOINCMD  --ignore-preflight-errors=all"
+JOINCMD=$(/usr/bin/rsh -n -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -l ubuntu k8s-master kubeadm token create --print-join-command 2>/dev/null)
 while [ "$JOINCMD" = "" ]
 do
   sleep 10
-  JOINCMD=$(/usr/bin/rsh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -l ubuntu k8s-master kubeadm token create --print-join-command 2>/dev/null)
+  JOINCMD=$(/usr/bin/rsh -n -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -l ubuntu k8s-master kubeadm token create --print-join-command 2>/dev/null)
 done
-echo "sudo $JOINCMD  --ignore-preflight-errors=all"
 echo "sudo $JOINCMD  --ignore-preflight-errors=all" | /bin/sh
