@@ -5,8 +5,8 @@ if [ "$(whoami)" = "root" ] ; then
 fi
 curl -H "Cache-Control: no-cache" https://raw.githubusercontent.com/Dynatrace-Reinhard-Pilz/k8s-lxd/master/bootstrap-kube-common.sh | bash
 
-# sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
-sudo kubeadm init --ignore-preflight-errors=all
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+# sudo kubeadm init --ignore-preflight-errors=all
 
 mkdir ~/.kube
 sudo cp /etc/kubernetes/admin.conf ~/.kube/config
