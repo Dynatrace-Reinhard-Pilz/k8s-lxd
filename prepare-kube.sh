@@ -15,7 +15,7 @@ fi
 sudo apt-get update
 sudo apt-get -yq upgrade
 sudo apt-get -yq autoremove
-sudo apt-get -yq install docker.io apt-transport-https curl jq iptables arptables ebtables linux-modules-5.3.0-42-generic nfs-common
+sudo apt-get -yq install docker.io apt-transport-https curl jq iptables arptables ebtables 5.4.0-67-generic nfs-common
 
 sudo systemctl enable docker
 sudo sed -i -e 's/containerd.sock/containerd.sock\ --exec-opt\ native.cgroupdriver=systemd/' /lib/systemd/system/docker.service
